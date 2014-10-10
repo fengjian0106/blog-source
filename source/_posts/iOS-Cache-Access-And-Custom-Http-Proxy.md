@@ -1,4 +1,4 @@
-title: iOScache系统和自定义http代理
+title: iOS cache系统和自定义http代理
 date: 2014-10-08 17:11:38
 tags: [iOS, cache, proxy]
 ---
