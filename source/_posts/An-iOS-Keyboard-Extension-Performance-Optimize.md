@@ -23,5 +23,6 @@ iOS平台上的 `Core Data` 是一套相当好用的数据持久化存储框架�
 1. 键盘的view，是分了好几个层次的，当作为container的UIView加载完成后，就立刻让键盘先显示出来，然后再触发加载真正的keyboard view，这样给用户的一个心理感觉就是键盘弹出的速度很快。
 2. 键盘切换的时候，不再每次都重新从xib中加载对应的view，而是将view缓存在cache里面，用空间换时间。
 3. 移除了keyboard view中每个key view上的 `Auto Layout` 约束条件，直接在 `layoutSubviews` 方法中设置subview的 `frame`，关于这个优化思路，可以看看 [Optimising Autolayout](http://pilky.me/36/)。需要强调的是，我们并不是否定 `Auto Layout` ，实际上我们团队现在采用的思路是 `Auto Layout` 和 `Manual Frame Layout` 一起使用，代码布局和xib布局一起使用，根据页面的需求做出更合适的选择。
+4. 2014-10-16更新，借助Facebook出品的神器https://github.com/facebook/AsyncDisplayKit.git，又抠了一些性能出来:]
 
 这款输入法app，我们还全面切换到使用 `ReactiveCocoa` 这个框架进行开发，当时也怀疑过是不是因为这个框架造成了性能的损失，从 `Instruments` 的测量数据来看，我们的顾虑是多余的， `ReactiveCocoa` 虽然使得整个函数调用栈的层次增加了不少，但是，这不是性能瓶颈。
