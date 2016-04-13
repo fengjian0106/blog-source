@@ -68,7 +68,7 @@ Erlang 是最接近于原始的 CSP 定义的，通过 name 进行通信，而�
 ### CSP 的基本使用
 这篇文章最主要的目的是讨论并发模式，为了避免陷入编程语言本身的各种细节，我们只会使用到 Swift 很少的语法特性。
 
-##### 从下面这个简单的 boring 函数开始
+#### 从下面这个简单的 boring 函数开始
 
 ```
 import Foundation
@@ -101,7 +101,7 @@ public func run01() {
  this is a boring func 10
 ```
 
-##### 稍微改动一下
+#### 稍微改动一下
 增加一点随机的延时，让 message 出现的时机不可预测 (延迟时间仍然控制在1秒之内)。并且让 boring 函数一直循环运行。
 
 ```
@@ -119,7 +119,7 @@ public func run02() {
 }
 ```
 
-##### 进入正题
+#### 进入正题
 Venice 的 co 函数，传入的参数是一个函数，在 co 的内部会执行这个传入的函数，但是并不会等待这个函数执行结束，对于 co 的调用者来说，co 函数本身会立刻返回。co 函数其实是开启了一个新的协程 (轻量级线程) 来真正的执行传入的函数。
 
 ```
@@ -163,7 +163,7 @@ run03() will return
 
 *在 Venice 里面，如果是在 channel 上进行读写操作，读写的同时已经相当于调用过 yield 了，所以也不需要使用者再次显式的调用 yield。在后面的例子的，就会看到这种不需要手动调用 yield 的场景。*
 
-##### 继续改动代码
+#### 继续改动代码
 调整代码成下面这个样子，在 co 调用后，让 run04() 所在的协程 sleep 一小段时间。
 
 ```
@@ -201,7 +201,7 @@ You're boring; I'm leaving.
 
 当main函数结束的时候，boring函数所在的协程也会结束。
 
-##### 协程 (coroutine)
+#### 协程 (coroutine)
 协程是一段独立运行的代码集合，通过 co 函数来启动。
 
 协程的系统开销是很小的 (比 thread 小很多)，可以同时存在大量的协程 (具体到 Venice 底层使用的 [libmill](http://libmill.org/)，可以同时运行 **2000万个** 协程，并且每秒可以进行 **5000万次** 协程上下文切换)。
@@ -212,14 +212,14 @@ You're boring; I'm leaving.
 
 可以把协程看成是轻量级的线程。
 
-##### 通讯 (communication) 
+#### 通讯 (communication) 
 在 run04() 里面，是不能看到在协程中运行的 boring 函数的运行结果的。
 
 boring 函数仅仅是把 msg 打印到了终端上。
 
 想在协程之间真正的传递数据，需要用到通讯 (communication)。
 
-##### Channel
+#### Channel
 在 Venice 里面，两个协程之间，通过 Channel\<Element\> 进行通讯。
 
 Channel\<Element\> 的基本操作就是下面这3个:
@@ -239,7 +239,7 @@ Channel\<Element\> 的基本操作就是下面这3个:
 	let message = channel.receive()!
 ```
 
-##### 使用 Channel
+#### 使用 Channel
 用 channel 连接 boring 函数和 run05 函数
 
 ```
@@ -280,7 +280,7 @@ You say: co a less boring func 4
 You're boring; I'm leaving.
 ```
 
-##### 同步 (Synchronization)
+#### 同步 (Synchronization)
 在 channel 上的读、写操作，是同步的、阻塞的。
 
 run05() 执行到 channel.receivingChannel.receive()! 的时候，只有当 channel 里面有数据被写入的时候，这个读操作才会返回 (读到数据的时候才返回)，否则 run05() 就会一直在这里等待，不会继续往下执行。
@@ -291,7 +291,7 @@ run05() 执行到 channel.receivingChannel.receive()! 的时候，只有当 chan
 
 channel 在协程之间完成通讯的同时，也达到了同步的目的。
 
-##### 带缓冲的 channel
+#### 带缓冲的 channel
 可以创建具有 buffer 的 channel。
 
 这种 channel，当 buffer 还没有写满的时候，是没有前面描述的那种同步特性的。
@@ -302,11 +302,13 @@ buffering 有点类似 Erlang 语言里面的 mailboxes。
 
 这篇文章后续的讨论，都不会使用 buffer。
 
-##### Golang 哲学
+#### Golang 哲学
 Don't communicate by sharing memory, share memory by communicating.
 
+
 ### 模式 (Patterns)
-##### Generator 模式：通过函数返回一个 channel 给调用者
+
+#### Generator 模式：通过函数返回一个 channel 给调用者
 Channel 是一等公民，和 class、struct、closure 同等重要。
 
 ```
@@ -350,7 +352,7 @@ You're boring; I'm leaving.
 
 但是代码本身确有明显的变化，boring 函数返回一个 channel 给调用者，同时，在 boring 函数内部，通过 co 启动一个新的协程做具体的业务，并且通过刚才创建的 channel 把结果发送出去。
 
-##### 利用 channel 作为 service 的接口
+#### 利用 channel 作为 service 的接口
 boring 函数对外提供了一个 service，这个 service 运行在独立的协程里面，并且通过channel 把数据传递给 service 的使用者。
 
 可以同时使用多个 service。
@@ -403,7 +405,7 @@ Ann 4  (will sleep 828 ms)
 You're both boring; I'm leaving.
 ```
 
-##### 多路复用 (Multiplexing)
+#### 多路复用 (Multiplexing)
 前面 run07() 里面的代码，始终都是先从 joe 里面读取数据，然后再从 ann 里面读取。如果 ann 里面的数据早于 joe 里面的数据就发送了，由于 channel 的同步特性，ann channel 其实会阻塞在它的 send 操作上，直到 run07 从 joe 里面读取完数据后，ann 所在的协程才能继续运行。
 
 为了改善这种情况，可以使用 fan-in 模式。不管是 joe 还是 ann，只要有数据准备好并且执行了 send 操作，都可以立刻读取到。
@@ -474,7 +476,7 @@ Joe 6  (will sleep 228 ms)
 You're both boring; I'm leaving.
 ```
 
-##### (Restoring sequencing)
+#### (Restoring sequencing)
 前面 run08 里面的 fan-in 模式，boring 函数只负责 send 消息，并不需要消息的接收者做一个答复。如果需要，可以像下面这样修改代码
 
 ```
@@ -561,7 +563,7 @@ Ann 3  (will sleep 962 ms)
 You're both boring; I'm leaving.
 ```
 
-##### Select
+#### Select
 前面介绍的多路复用技术，是通过启动多个协程实现的，每个 channel 对应一个协程。
 
 另一种更常用的办法，是使用 select 操作，在一个协程里面同时读写多个 channel。
@@ -644,7 +646,7 @@ You're both boring; I'm leaving.
 
 *这里用的 select 操作，和 Linux / Unix 里面的 select、poll、epoll，都是类似的，只不过前者监听的是 channel，后者监听的是 fd*
 
-##### 在 Select 的基础上实现超时机制 (Timeout)
+#### 在 Select 的基础上实现超时机制 (Timeout)
 定时器是基于 channel 实现出来的，当达到定时时间的时候，定时器 channel 上会发送一个消息。
 
 定时器可以放在 select 操作的里面
@@ -702,7 +704,7 @@ You are too slow.
 You're boring; I'm leaving.
 ```
 
-##### Select 操作的整体超时
+#### Select 操作的整体超时
 前面的 run11，是在每次进入 select 的时候，设置了一个超时 channel。
 
 也可以在 while 循环的外面，设置一个整体的超时 channel，像下面这样
@@ -765,7 +767,7 @@ You are too slow.
 You're boring; I'm leaving.
 ```
 
-##### quit channel
+#### quit channel
 boring 函数的调用者，可以主动的让 boring 内部的协程停止工作，也是通过 channel 来实现。
 
 ```
@@ -822,7 +824,7 @@ Joe, and will sleep 359 ms
 You're boring; I'm leaving.
 ```
 
-##### 在 quit channel 上接收消息
+#### 在 quit channel 上接收消息
 接着上面的例子，当 run13 向 quit channel 发送 true 的时候，run13 怎样才能知道 boring 函数成功的结束了自己的运行呢？让 boring 告诉它的调用者就行，同样，还是通过 quit channel。
 
 ```
@@ -887,7 +889,7 @@ Joe says: See you!
 You're boring; I'm leaving.
 ```
 
-##### Daisy-chain
+#### Daisy-chain
 
 ```
 import Foundation
@@ -931,7 +933,7 @@ You're boring; I'm leaving.
 ### 系统软件 (Systems Software)
 让我们具体看一下 CSP 这种并发模型，是如何用在系统软件的开发中的。
 
-##### 例子：Google Search
+#### 例子：Google Search
 问: Google search 需要做什么事情?
 
 
@@ -945,7 +947,7 @@ You're boring; I'm leaving.
 
 那么，怎样做呢？
 
-##### 模拟各种 search service
+#### 模拟各种 search service
 模拟 3 个 search service，每次执行 search 的时候，随机延时一小段时间。
 
 ```
@@ -1006,7 +1008,7 @@ internal extension Array where Element: GoogleSearchResultDebugAble {
 }
 ```
 
-##### Google Search 1.0
+#### Google Search 1.0
 google 函数有一个输入参数，返回一个数组。
 
 google 内部按照顺序依次调用 web、image、video search service，然后把它们的结果组装在一个数组内。
@@ -1046,7 +1048,7 @@ google search result is:
   video result for CSP, use time: 243 ms
 ```
 
-##### Google Search 2.0
+#### Google Search 2.0
 并发调用 web、image、video search service，然后等待它们的返回结果。
 
 不使用锁机制，不使用条件状态变量，不使用 callback。
@@ -1092,7 +1094,7 @@ google search result is:
 
 很明显，并发执行的效果比顺序执行的效果好很多。
 
-##### Google Search 2.1
+#### Google Search 2.1
 还可以加上超时机制，如果某个 search service 执行的时间太长，就不等待它的返回结果。
 
 不使用锁机制，不使用条件状态变量，不使用 callback。
@@ -1153,7 +1155,7 @@ google search result is:
   video result for CSP, use time: 537 ms
 ```
 
-##### 避免超时
+#### 避免超时
 问：怎样才能避免丢弃响应速度更慢的服务器返回的搜索结果？
 
 答：使用 Replicate 策略。同时向多个同类型的 search service 发送请求，使用第一个返回来的查询结果。
@@ -1170,7 +1172,7 @@ private func first(query query: String, replicas: ((String) -> GoogleSearchResul
 }
 ```
 
-##### Google Search 3.0
+#### Google Search 3.0
 仍然不使用锁机制，不使用条件状态变量，不使用 callback。
 
 ```
