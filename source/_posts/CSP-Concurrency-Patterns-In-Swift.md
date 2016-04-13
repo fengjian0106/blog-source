@@ -70,7 +70,7 @@ Erlang 是最接近于原始的 CSP 定义的，通过 name 进行通信，而�
 
 #### 从下面这个简单的 boring 函数开始
 
-```
+```swift
 import Foundation
 
 private func boring(msg: String) {
@@ -104,7 +104,7 @@ public func run01() {
 #### 稍微改动一下
 增加一点随机的延时，让 message 出现的时机不可预测 (延迟时间仍然控制在1秒之内)。并且让 boring 函数一直循环运行。
 
-```
+```swift
 import Foundation
 
 private func boring(msg: String) {
@@ -122,7 +122,7 @@ public func run02() {
 #### 进入正题
 Venice 的 co 函数，传入的参数是一个函数，在 co 的内部会执行这个传入的函数，但是并不会等待这个函数执行结束，对于 co 的调用者来说，co 函数本身会立刻返回。co 函数其实是开启了一个新的协程 (轻量级线程) 来真正的执行传入的函数。
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -166,7 +166,7 @@ run03() will return
 #### 继续改动代码
 调整代码成下面这个样子，在 co 调用后，让 run04() 所在的协程 sleep 一小段时间。
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -220,21 +220,17 @@ boring 函数仅仅是把 msg 打印到了终端上。
 想在协程之间真正的传递数据，需要用到通讯 (communication)。
 
 #### Channel
-在 Venice 里面，两个协程之间，通过 Channel\<Element\> 进行通讯。
+在 Venice 里面，两个协程之间，通过 Channel 进行通讯。
 
-Channel\<Element\> 的基本操作就是下面这3个:
+Channel 的基本操作就是下面这3个:
 
-```
+```swift
 	//声明、初始化
 	let channel = Channel<String>()
-```
 
-```
 	//在channel上发送数据
 	channel.send("ping")
-```
 
-```
 	//在channel上接收数据
 	let message = channel.receive()!
 ```
@@ -242,7 +238,7 @@ Channel\<Element\> 的基本操作就是下面这3个:
 #### 使用 Channel
 用 channel 连接 boring 函数和 run05 函数
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -311,7 +307,7 @@ Don't communicate by sharing memory, share memory by communicating.
 #### Generator 模式：通过函数返回一个 channel 给调用者
 Channel 是一等公民，和 class、struct、closure 同等重要。
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -357,7 +353,7 @@ boring 函数对外提供了一个 service，这个 service 运行在独立的�
 
 可以同时使用多个 service。
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -410,7 +406,7 @@ You're both boring; I'm leaving.
 
 为了改善这种情况，可以使用 fan-in 模式。不管是 joe 还是 ann，只要有数据准备好并且执行了 send 操作，都可以立刻读取到。
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -476,10 +472,10 @@ Joe 6  (will sleep 228 ms)
 You're both boring; I'm leaving.
 ```
 
-#### (Restoring sequencing)
+#### 回复消息 (Restoring sequencing)
 前面 run08 里面的 fan-in 模式，boring 函数只负责 send 消息，并不需要消息的接收者做一个答复。如果需要，可以像下面这样修改代码
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -570,7 +566,7 @@ You're both boring; I'm leaving.
 
 可以用 select 操作重新实现一遍 fan-in 模式
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -652,7 +648,7 @@ You're both boring; I'm leaving.
 定时器可以放在 select 操作的里面
 
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -709,7 +705,7 @@ You're boring; I'm leaving.
 
 也可以在 while 循环的外面，设置一个整体的超时 channel，像下面这样
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -767,10 +763,10 @@ You are too slow.
 You're boring; I'm leaving.
 ```
 
-#### quit channel
+#### 取消 (quit channel)
 boring 函数的调用者，可以主动的让 boring 内部的协程停止工作，也是通过 channel 来实现。
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -827,7 +823,7 @@ You're boring; I'm leaving.
 #### 在 quit channel 上接收消息
 接着上面的例子，当 run13 向 quit channel 发送 true 的时候，run13 怎样才能知道 boring 函数成功的结束了自己的运行呢？让 boring 告诉它的调用者就行，同样，还是通过 quit channel。
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -891,7 +887,7 @@ You're boring; I'm leaving.
 
 #### Daisy-chain
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -950,7 +946,7 @@ You're boring; I'm leaving.
 #### 模拟各种 search service
 模拟 3 个 search service，每次执行 search 的时候，随机延时一小段时间。
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -1013,7 +1009,7 @@ google 函数有一个输入参数，返回一个数组。
 
 google 内部按照顺序依次调用 web、image、video search service，然后把它们的结果组装在一个数组内。
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -1053,7 +1049,7 @@ google search result is:
 
 不使用锁机制，不使用条件状态变量，不使用 callback。
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -1099,7 +1095,7 @@ google search result is:
 
 不使用锁机制，不使用条件状态变量，不使用 callback。
 
-```
+```swift
 import Foundation
 import Venice
 
@@ -1160,7 +1156,7 @@ google search result is:
 
 答：使用 Replicate 策略。同时向多个同类型的 search service 发送请求，使用第一个返回来的查询结果。
 
-```
+```swift
 private func first(query query: String, replicas: ((String) -> GoogleSearchResult)...) -> GoogleSearchResult {
     let channel = Channel<GoogleSearchResult>()
     
@@ -1175,7 +1171,7 @@ private func first(query query: String, replicas: ((String) -> GoogleSearchResul
 #### Google Search 3.0
 仍然不使用锁机制，不使用条件状态变量，不使用 callback。
 
-```
+```swift
 import Foundation
 import Venice
 
