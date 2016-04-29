@@ -163,7 +163,7 @@ RAC 里面的 [collect](http://reactivex.io/documentation/operators/to.html) 是
                    return [[[[FMAvatarManager shareInstance] rac_setAvatar:emailAddr image:image] //2
                             map:^id(id value) {
                                 //4
-                                return RACTuplePack(value, nil);//rac_setAvatar成功的时候
+                                return RACTuplePack(value, nil);
                             }]
                            catch:^RACSignal *(NSError *error) {
                                //3
