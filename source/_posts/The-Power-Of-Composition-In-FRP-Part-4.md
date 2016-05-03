@@ -1,11 +1,11 @@
-title: The Power Of Composition In FRP Part 4
+title: 用 FRP 事半功倍的写代码（四）
 date: 2016-05-03 14:42:56
 tags: [FRP, ReactiveCocoa]
 ---
 
 ### 监听系统截屏操作的复杂管道
 
-这个一个很复杂的 Pipeline，因为要做的业务比较繁琐，如下图：
+这是一个很复杂的 Pipeline，因为要做的业务比较繁琐，如下图：
 
 ![monitor screenshot](/images/monitor_screenshot.png)
 
