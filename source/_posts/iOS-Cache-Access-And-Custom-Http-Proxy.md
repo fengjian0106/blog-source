@@ -41,7 +41,7 @@ Proxy-Connection: keep-alive
 
 使用 `AVQueuePlayer` 的时候，需要做一些 `magic trick`，关键代码如下:
 
-```
+``` objectivec
 httpProxyUrl = [NSURL URLWithString:[NSString stringWithFormat:@"http://127.0.0.1:%d/http://%@/music_new/%@", httpProxyPort, kKYMediaServiceManagerRemoteServerIpAndPort, mediaInfo.fileName]];
 ```
 
@@ -53,7 +53,7 @@ http://127.0.0.1:9258/http://media.test.com/xxx.mp3
 
 在 [Polipo](http://www.pps.univ-paris-diderot.fr/~jch/software/polipo/) 中，解析得到的最终目的服务器的地址(相对路径)是 `/http://media.test.com/xxx.mp3`，需要稍微修改一下源代码，去掉最左侧的 `/` 字符。具体就是在 `client.c` 文件的 `httpClientHandlerHeaders` 函数中添加一小段代码，也就是 `#ifdef POLIPO_KUYQI_VERSION` 和 `#endif` 之间的那一段:
 
-```
+```  objectivec
 int
 httpClientHandlerHeaders(FdEventHandlerPtr event, StreamRequestPtr srequest,
                          HTTPConnectionPtr connection)
