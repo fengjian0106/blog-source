@@ -1,4 +1,4 @@
-title: 用 Swift 实现 CSP 并发模型
+title: 通过 Swift 学习 CSP 并发模型
 date: 2016-04-10 22:45:16
 tags: [Swift, CSP, Concurrency]
 ---
