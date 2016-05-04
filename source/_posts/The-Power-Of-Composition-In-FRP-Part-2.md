@@ -1,4 +1,4 @@
-title: 用 FRP 事半功倍的写代码（二）
+title: 用 ReactiveCocoa 事半功倍的写代码（二）
 date: 2016-04-26 10:38:03
 tags: [FRP, ReactiveCocoa] 
 ---
