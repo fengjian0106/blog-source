@@ -82,3 +82,16 @@ avatar: /images/avatar.jpg
 
 # baidu
 baidu_analytics: eeb1f7ee5ca721cee0bcad8df6a28d5e
+
+
+# RSS
+plugin:
+- hexo-generator-feed
+
+# Feed Atom
+feed:
+type: atom
+path: atom.xml
+limit: 20
+
+
