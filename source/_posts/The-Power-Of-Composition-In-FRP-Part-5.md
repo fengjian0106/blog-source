@@ -9,7 +9,7 @@ tags: [FRP, ReactiveCocoa]
 
 先看下面这段代码：
 
-```
+``` objectivec
 - (void)fetchNecessaryDataForAccounts:(NSArray<FMAccount *> *)accounts {
     NSParameterAssert(accounts != nil);
     NSParameterAssert(accounts.count > 0);
@@ -108,7 +108,7 @@ tags: [FRP, ReactiveCocoa]
 
 回到前面这个例子，accounts 是 pipeline 的输入，successAccounts 和 failAccounts 是 pipeline 的输出，其他的操作都可以看成是中间处理环节。这个 pipeline 仅仅是完成了下载数据的功能，在真实的产品需求中，为了更好的照顾用户体验，还希望能够显示出下载进度信息，也就是说，对于 accounts 这个输入，还需要另外一种形式的输出信息，可以体现出下载进度情况。这里还有一个约束条件，[QHOldAccountMigration fetchInitialDataForAccount:account] 这个操作本身是无法表现出下载数据时的进度信息的，因为并不是下载一个文件(在编程惯例中，通常只在上传和下载文件的时候或类似的场景中，才会设计出能体现进度信息的 API)，所以这里还需要想办法模拟出一种进度信息用来在 UI 上进行显示，主要代码如下：
 
-```
+``` objectivec
 - (void)fetchNecessaryDataForAccounts:(NSArray<FMAccount *> *)accounts {
     NSParameterAssert(accounts != nil);
     NSParameterAssert(accounts.count > 0);
