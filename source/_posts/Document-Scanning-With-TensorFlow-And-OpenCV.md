@@ -3,6 +3,12 @@ date: 2017-05-08 16:21:55
 tags: [TensorFlow, CNN, 卷积神经网络]
 ---
 
+>2018-06-02 update:  
+>
+>_*这篇博客有一个后续更新版本，请看 [手机端运行卷积神经网络实现文档检测功能(二) -- 从 VGG 到 MobileNetV2 知识梳理](http://fengjian0106.github.io/2018/06/02/Document-Scanning-With-TensorFlow-And-OpenCV-Part-Two/)*_  
+>
+>_*另外，代码也已开源放在 github 上，[https://github.com/fengjian0106/hed-tutorial-for-document-scanning](https://github.com/fengjian0106/hed-tutorial-for-document-scanning)*_
+
 ### 前言
 * 本文不是神经网络或机器学习的入门教学，而是通过一个真实的产品案例，展示了在手机客户端上运行一个神经网络的关键技术点
 * 在卷积神经网络适用的领域里，已经出现了一些很经典的图像分类网络，比如 VGG16/VGG19，Inception v1-v4 Net，ResNet 等，这些分类网络通常又都可以作为其他算法中的基础网络结构，尤其是 VGG 网络，被很多其他的算法借鉴，本文也会使用 VGG16 的基础网络结构，但是不会对 VGG 网络做详细的入门教学

@@ -63,7 +63,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: hexo-theme-next
+theme: hexo-theme-next-v6
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -73,15 +73,15 @@ deploy:
     branch: master
 
 
-# duoshuo
-duoshuo_shortname: fengjian0106
+# duoshuo 这个已经停用了，现在改成用 gitment 了，在 
+# duoshuo_shortname: fengjian0106
 
 # avatar
-avatar: /images/avatar.jpg
+# avatar: /images/avatar.jpg
 
 
 # baidu
-baidu_analytics: eeb1f7ee5ca721cee0bcad8df6a28d5e
+# baidu_analytics: eeb1f7ee5ca721cee0bcad8df6a28d5e
 
 
 # RSS

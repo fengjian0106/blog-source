@@ -30,3 +30,6 @@ node_modules
 # hexo file
 public
 .deploy_git
+
+# .DS_Store file on MacOS
+.DS_Store
